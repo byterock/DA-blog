@@ -1,10 +1,11 @@
-package DA;
+package DA_ABC;
 
 BEGIN {
   $DA::VERSION = "0.01";
 }
 
-use Moose::Role;
+use Moose;
+use  MooseX::ABC;
 
 requires '_execute';
 

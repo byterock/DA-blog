@@ -1,12 +1,13 @@
-package DA;
+package DAA;
 
 BEGIN {
   $DA::VERSION = "0.01";
 }
 
-use Moose::Role;
+use Moose;
+use  MooseX::AbstractMethod;
 
-requires '_execute';
+abstract '_execute';
 
 sub retrieve {
    my $self=shift;
