@@ -29,5 +29,4 @@ my @elements  = ($street,$city,$country);
 
 ok(ref($address) eq 'DA::SQL',"Address is a DA");
 
-ok($address->retrieve() eq 'SELECT FROM person  AS me street, city, country','SQL correct');
-
+ok($address->retrieve() eq 'SELECT  street, city, country FROM person  AS me','SQL correct');

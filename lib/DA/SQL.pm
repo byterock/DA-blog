@@ -1,32 +1,27 @@
 package DA::SQL;
 
-
 BEGIN {
-  $DA::SQL::VERSION = "0.01";
+    $DA::SQL::VERSION = "0.01";
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose;
 with 'DA';
 
-
 sub _execute {
     my $self = shift;
-    my ($connection,$container,$opts) = @_;
+    my ( $connection, $container, $opts ) = @_;
     my $delimiter = " ";
-    my $sql  = "SELECT FROM ";
+    my $sql       = "SELECT ";
 
-    $sql.= $self->view()->sql();
+    foreach my $element ( @{ $self->elements() } ) {
 
-
-    foreach my $element ( @{$self->elements()}) {
-
-        $sql .= $delimiter.$element->sql();
+        $sql .= $delimiter . $element->sql();
 
         $delimiter = ", ";
 
     }
 
-    return $sql;
+    return   $sql ." FROM ". $self->view()->sql();
 
 }
 
