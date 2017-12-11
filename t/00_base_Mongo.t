@@ -24,7 +24,7 @@ my $city = DA::Element->new({name=>'city',
                               }); 
 ok(ref($city) eq 'DA::Element',"City is an Element");
 my @elements  = ($street,$city,$country);
-  my $address    = DA::Mongo->new({view=>$view,
+my $address    = DA::Mongo->new({view=>$view,
                             elements=>\@elements});
 
 ok(ref($address) eq 'DA::Mongo',"Address is a DA::Mongo");

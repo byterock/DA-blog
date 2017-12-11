@@ -4,8 +4,11 @@ BEGIN {
   $DA::VERSION = "0.01";
 }
 
-use Moose;
- use Moose::Util qw(apply_all_roles does_role);
+use Moose::Role;
+
+requires '_execute';
+
+
 has view => (
     is     => 'rw',
     isa    => 'Object',
@@ -19,18 +22,6 @@ has elements  => (
 sub retrieve {
    my $self=shift;
    my ($conn,$container,$opt) = @_;
-   
-   if ($conn eq 'DBH'){
-       apply_all_roles( $self, "DA::LSD::SQL");
-
-   }
-   elsif ($conn eq 'MONGO'){
-       apply_all_roles( $self, "DA::LSD::Mongo");
-
-   }
-   die "LSD $conn must use DA::Roles::API"
-    if (!does_role($self,'DA::Roles::API'));
-    
    return $self->_execute("retrieve",$conn,$container,$opt);
 }
 
