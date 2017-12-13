@@ -1,11 +1,11 @@
-package DA;
+package DA_D;
 
 BEGIN {
-  $DA::VERSION = "0.01";
+  $DA_D::VERSION = "0.01";
 }
 
 use Moose;
- use Moose::Util qw(apply_all_roles does_role);
+ use Moose::Util qw(apply_all_roles does_role with_traits);
 has view => (
     is     => 'rw',
     isa    => 'Object',
@@ -19,21 +19,20 @@ has elements  => (
 sub retrieve {
    my $self=shift;
    my ($conn,$container,$opt) = @_;
-   
+   my $lsd = DA::LSD->new(DA=>$self);
    if ($conn eq 'DBH'){
-       apply_all_roles( $self, "DA::LSD::SQL");
+      apply_all_roles( $lsd, "DA::LSD::SQL_D");
 
    }
    elsif ($conn eq 'MONGO'){
-       apply_all_roles( $self, "DA::LSD::Mongo");
+      apply_all_roles( $lsd, "DA::LSD::Mongo_D");
 
    }
-   die "LSD $conn must use DA::Roles::API"
-    if (!does_role($self,'DA::Roles::API'));
-    
-   return $self->_execute("retrieve",$conn,$container,$opt);
+  die "LSD $conn must use DA::Roles::API"
+    if (!does_role($lsd,'DA::Roles::API'));
+   return $lsd->_execute("retrieve",$conn,$container,$opt);
 }
-
+__PACKAGE__->meta->make_immutable;
  
 {
     package 
@@ -94,6 +93,19 @@ sub retrieve {
     }
 }
 
-__PACKAGE__->meta->make_immutable;
+
+{
+    package 
+           DA::LSD;
+    use Moose;
+     
+    has DA => (
+       is     => 'rw',
+       isa    => 'Object',
+    );
+    
+
+}
+
 1;
 
