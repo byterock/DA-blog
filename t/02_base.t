@@ -3,7 +3,7 @@ use Test::More 0.82;
 use Test::Fatal;
 
 use lib ('D:\GitHub\DA-blog\lib');
-use Test::More tests => 10;
+use Test::More tests => 14;
 
 BEGIN {
     use_ok('DA');
@@ -39,9 +39,37 @@ ok(
       'SELECT  street, city, country FROM person  AS me',
     'SQL correct'
 );
+
 ok(
     $address->retrieve('MONGO') eq
       'db.person.find({},{ street: 1, city: 1, country: 1}',
     "Mongo Query correct"
 );
 
+eval {
+    $address->pong();
+    pass("address can pong");
+};
+if ($@) {
+    fail("address cannot do a pong");
+}
+
+eval {
+    $address->ping();
+    pass("address can ping");
+};
+if ($@) {
+    fail("address cannot do a ping");
+}
+
+ok(
+    $address->retrieve( 'DBH', $result ) eq
+      'SELECT  street, city, country FROM person  AS me',
+    'SQL correct'
+);
+
+ok(
+    $address->retrieve('MONGO') eq
+      'db.person.find({},{ street: 1, city: 1, country: 1}',
+    "Mongo Query correct"
+);

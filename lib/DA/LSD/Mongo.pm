@@ -5,7 +5,7 @@ BEGIN {
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose::Role;
-# with qw(DA::Roles::API);
+#with qw(DA::Roles::API);
 sub _execute {
     my $self = shift;
     my ( $connection, $container, $opts ) = @_;
@@ -25,6 +25,11 @@ sub _execute {
 
     return $sql;
 
+}
+
+sub pong {
+    my $self = shift;
+    return 'Pong';
 }
 
 1;

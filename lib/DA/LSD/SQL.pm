@@ -26,4 +26,11 @@ sub _execute {
 
 }
 
+
+sub ping {
+    my $self = shift;
+    return 'Ping';
+}
+
+
 1;
