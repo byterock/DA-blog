@@ -4,7 +4,7 @@ use Test::Fatal;
 
 use lib ('D:\GitHub\DA-blog\lib');
 use Test::More tests => 12;
-
+ use Moose::Util qw(apply_all_roles does_role with_traits);
 BEGIN {
     use_ok('DA_D');
     use_ok('DA::View');
@@ -40,6 +40,8 @@ ok(
     'SQL correct'
 );
 
+my $elements = $address->elements();
+ok (does_role($elements->[0],'DA::LSD::SQL_D::Element'),"Does Role DA::LSD::SQL_D::Element" );
 eval{
      $address->ping();
      fail("address can ping");
@@ -62,7 +64,7 @@ ok(
       'db.person.find({},{ street: 1, city: 1, country: 1}',
     "Mongo Query correct"
 );
-
+ok (does_role($elements->[0],'DA::LSD::SQL_D::Element'),"Does Role DA::LSD::SQL_D::Element" );
 eval{
      $address->ping();
      fail("address can ping");

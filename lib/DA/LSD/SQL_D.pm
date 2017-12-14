@@ -16,7 +16,7 @@ sub _execute {
 
     foreach my $element ( @{ $self->DA->elements() } ) {
 
-        $sql .= $delimiter . $element->sql();
+        $sql .= $delimiter . $element->retrieve();
 
         $delimiter = ", ";
 
@@ -32,5 +32,18 @@ sub ping {
     return 'Ping';
 }
 
-
+{
+  package 
+     DA::LSD::SQL_D::Element;
+  use Moose::Role;
+  sub retrieve {
+        my $self = shift;
+        if ( $self->alias() ) {
+            return $self->name() . "  AS " . $self->alias();
+        }
+        else {
+            return $self->name();
+        }
+    }
+}
 1;

@@ -5,7 +5,9 @@ BEGIN {
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose::Role;
-#with qw(DA::Roles::API);
+with qw(DA::Roles::API);
+
+
 sub _execute {
     my $self = shift;
     my ( $connection, $container, $opts ) = @_;

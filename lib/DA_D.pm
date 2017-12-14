@@ -22,7 +22,9 @@ sub retrieve {
    my $lsd = DA::LSD->new(DA=>$self);
    if ($conn eq 'DBH'){
       apply_all_roles( $lsd, "DA::LSD::SQL_D");
-
+      foreach my $elememt (@{$self->elements()}) {
+           apply_all_roles( $elememt, "DA::LSD::SQL_D::Element");
+       }
    }
    elsif ($conn eq 'MONGO'){
       apply_all_roles( $lsd, "DA::LSD::Mongo_D");
@@ -81,11 +83,18 @@ __PACKAGE__->meta->make_immutable;
         isa      => 'Str',
         is     => 'rw',
     );
+    
+    has retrieve1=>(
+       isa =>'Str',
+       is  =>'rw',
+       lazy=>1,
+       builder=> '_element_retrieve'
+    
+    );
     sub sql {
         my $self = shift;
         if ( $self->alias() ) {
-            warn('JSO '.$self->name() . "  AS " . $self->alias());
-            return $self->name() . "  AS " . $self->alias();
+            return $self->name() . " AS " . $self->alias();
         }
         else {
             return $self->name();
