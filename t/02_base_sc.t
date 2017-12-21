@@ -1,4 +1,19 @@
+
 #!perl 
+{
+  package DBI::db;
+ sub new {
+    my $class = shift;
+
+    my $self = {};
+    bless( $self, ( ref($class) || $class ) );
+
+    return( $self );
+
+}
+
+
+}        
 
 use Test::More 0.82;
 use Test::Fatal;
@@ -6,6 +21,8 @@ use Data::Dumper;
 use lib ('D:\GitHub\DA-blog\lib');
 use Test::More tests => 10;
 use Moose::Util qw(apply_all_roles does_role with_traits);
+
+
 BEGIN {
     use_ok('DA_SC');
     use_ok('DA::View');
@@ -36,9 +53,10 @@ my $address = DA_SC->new(
 );
 
 
-ok( ref($address) eq 'DA_SC', "Address is a DA_SC" );
+ ok( ref($address) eq 'DA_SC', "Address is a DA_SC" );
+ my $fake_dbh = DBI::db->new();
 ok(
-    $address->retrieve( 'DBH', $result ) eq
+    $address->retrieve( $fake_dbh, $result ) eq
       'SELECT  street, city, country FROM person  AS me',
     'SQL correct'
 );

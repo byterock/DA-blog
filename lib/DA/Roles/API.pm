@@ -6,6 +6,7 @@ BEGIN {
 
 use Moose::Role;
 requires '_execute';
+requires 'connection_class';
 
 1;
 

@@ -5,6 +5,7 @@ BEGIN {
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose::Role;
+with (qw( DA::Roles::LSD));
 
 sub _execute {
     my $self = shift;
@@ -21,6 +22,11 @@ sub _execute {
 
      return   $sql ." FROM ". $self->view()->retrieve();
 
+}
+
+sub connection_class {
+    my $self = shift;
+    return 'DBI::db';
 }
 
 
