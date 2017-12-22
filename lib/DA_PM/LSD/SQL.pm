@@ -1,21 +1,18 @@
-package DA_S::LSD::SQL;
+package DA_PM::LSD::SQL;
 
 BEGIN {
-    $DA_RC::LSD::SQL::VERSION = "0.01";
+    $DA_PM::LSD::SQL::VERSION = "0.01";
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose;
-with qw(DA::Roles::API);
-use MooseX::ClassAttribute;
-use DA_S::LSD kind => 'DA';
-
+with (qw( DA_PM::Roles::LSD));
 
 sub _execute {
     my $self = shift;
     my ( $da,$connection, $container, $opts ) = @_;
     my $delimiter = " ";
     my $sql       = "SELECT ";
-    foreach my $element ( @{  $self->DA->elements() } ) {
+    foreach my $element ( @{  $self->elements() } ) {
 
         $sql .= $delimiter . $element->retrieve();
 
@@ -23,14 +20,15 @@ sub _execute {
 
     }
 
-     return   $sql ." FROM ". $self->DA->view()->retrieve();
+     return   $sql ." FROM ". $self->view()->retrieve();
 
 }
 
-sub connection_class {
+sub connection_classx {
     my $self = shift;
-    return 1;
+    return 'DBI::db';
 }
+
 
 sub ping {
     my $self = shift;
