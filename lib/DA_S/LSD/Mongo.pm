@@ -1,11 +1,11 @@
 package DA_S::LSD::Mongo;
 
 BEGIN {
-    $DA::Mongo_D::VERSION = "0.01";
+    $DA_S::Mongo_D::VERSION = "0.01";
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose;
-with qw(DA::Roles::API);
+with qw(DA_S::Roles::API);
 use MooseX::ClassAttribute;
 use DA_S::LSD elements=>'elements', view=>'view';
 
@@ -31,7 +31,7 @@ sub _execute {
 }
 sub connection_class {
     my $self = shift;
-    return 1;
+    return 'MongoDB::Collection';
 }
 
  sub pong {

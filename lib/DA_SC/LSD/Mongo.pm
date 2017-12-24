@@ -5,7 +5,7 @@ BEGIN {
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose::Role;
-
+with (qw( DA::Roles::LSD));
 
 sub _execute {
     my $self = shift;
@@ -28,6 +28,10 @@ sub _execute {
 
 }
 
+sub connection_class {
+    my $self = shift;
+    return 'MongoDB::Collection';
+}
  sub pong {
     my $self = shift;
     return 'Pong';

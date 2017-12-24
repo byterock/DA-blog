@@ -24,7 +24,7 @@ sub _execute {
 
 }
 
-sub connection_classx {
+sub connection_class {
     my $self = shift;
     return 'DBI::db';
 }

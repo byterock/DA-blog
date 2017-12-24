@@ -14,21 +14,34 @@
 
 
 }        
+{
+  package MongoDB::Collection;
+ sub new {
+    my $class = shift;
 
+    my $self = {};
+    bless( $self, ( ref($class) || $class ) );
+
+    return( $self );
+
+}
+
+
+}             
 use Test::More 0.82;
 use Test::Fatal;
 use Data::Dumper;
 use lib ('D:\GitHub\DA-blog\lib');
 use Test::More tests => 10;
 use Moose::Util qw(apply_all_roles does_role with_traits);
-
+use Time::HiRes;
 
 BEGIN {
     use_ok('DA_SC');
     use_ok('DA::View');
     use_ok('DA::Element');
 }
-
+my $bm_s =  Time::HiRes::gettimeofday();
 my $view = DA::View->new(
     {
         name  => 'person',
@@ -60,13 +73,15 @@ ok(
       'SELECT  street, city, country FROM person  AS me',
     'SQL correct'
 );
-
+my $fake_mongo = MongoDB::Collection->new();
 
 ok(
-    $address->retrieve('MONGO') eq
+    $address->retrieve($fake_mongo) eq
       'db.person.find({},{ street: 1, city: 1, country: 1}',
     "Mongo Query correct"
 );
+my $bm_e =  Time::HiRes::gettimeofday();
+printf("I ran in %.8f s\n", $bm_e - $bm_s);
 
 
 

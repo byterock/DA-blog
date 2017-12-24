@@ -1,7 +1,7 @@
-package DA::Roles::API;
+package DA_S::Roles::API;
 
 BEGIN {
-  $ DA::Roles::API::VERSION = "0.01";
+  $ DA_S::Roles::API::VERSION = "0.01";
 }
 
 
