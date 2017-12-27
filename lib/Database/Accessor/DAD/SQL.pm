@@ -1,17 +1,13 @@
-package DA_S::LSD::SQL;
+package Database::Accessor::DAD::SQL;
 
 BEGIN {
-    $DA_S::LSD::SQL::VERSION = "0.01";
+    $Database::Accessor::DAD::SQL::VERSION = "0.01";
 }
 use lib qw(D:\GitHub\DA-blog\lib);
 use Moose;
-with qw(DA_S::Roles::API);
-#use MooseX::ClassAttribute;
-# use DA_S::LSD elements=>'elements', view=>'view';
+with (qw( Database::Accessor::Roles::DAD));
 
-
-
-sub _execute {
+sub Execute {
     my $self = shift;
     my ( $da,$connection, $container, $opts ) = @_;
     my $delimiter = " ";
@@ -28,15 +24,11 @@ sub _execute {
 
 }
 
-sub connection_class {
+sub DB_Class {
     my $self = shift;
-    return  'DBI::db';
+    return 'DBI::db';
 }
 
-sub ping {
-    my $self = shift;
-    return 'Ping';
-}
 
 
 1;

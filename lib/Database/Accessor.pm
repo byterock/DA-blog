@@ -1,8 +1,8 @@
-package DA_PM;
+package Database::Accessor;
 use lib qw(D:\GitHub\DA-blog\lib);
 
 BEGIN {
-  $DA_PM::VERSION = "0.01";
+  $Database::Accessor::VERSION = "0.01";
 }
 
 use Data::Dumper;
@@ -12,15 +12,16 @@ use Moose::Util qw(does_role);
 
 sub BUILD {
     my $self = shift;
-    map { $self->_loadLSDClassesFromDir($_) }
-      grep { -d $_ } map { File::Spec->catdir($_, 'DA_PM','LSD' ) } @INC;
+    map { $self->_loadDADClassesFromDir($_) }
+      grep { -d $_ } map { File::Spec->catdir($_, 'Database','Accessor' ) } @INC;
 
 }
 
-sub _loadLSDClassesFromDir {
+sub _loadDADClassesFromDir {
     my $self = shift;
-    my ($path) = @_;
-    
+    my ($path,$dad) = @_;
+    $dad = {}
+      if (ref($dad) ne 'HASH');
     opendir(DIR, $path) or die "Unable to open $path: $!";
     
     my @files = grep { !/^\.{1,2}$/ } readdir(DIR);
@@ -28,67 +29,55 @@ sub _loadLSDClassesFromDir {
     closedir(DIR);
 
     @files = map { $path . '/' . $_ } @files;
-    
-    my $lsd;
+   
     for (@files) {
         # If the file is a directory
         if (-d $_) {
-
+           $self->_loadDADClassesFromDir($_,$dad);
             # using a new directory we just found.
         }
         elsif (/.pm$/) { #we only care about pm files
             my ($volume, $dir, $file) = File::Spec->splitpath($_);
             $file =~ s{\.pm$}{};    # remove .pm extension
-            $dir =~ s/^.+Replay\/Rules\///;
-           
-            # my $_package = join '::' => grep $_ => File::Spec->splitdir($dir);
-            # my $skipname = join '_' => grep $_ => File::Spec->splitdir($dir);
-            
-          
+            $dir =~ s/^.+Database\/Accessor\///;
+            my $_package = join '::' => grep $_ => File::Spec->splitdir($dir);
             # # untaint that puppy!
-           
-            # my ($package) = $_package =~ /^([[:word:]]+(?:::[[:word:]]+)*)$/;
-             my $classname = "";
-            
+            my ($package) = $_package =~ /^([[:word:]]+(?:::[[:word:]]+)*)$/;
+            my $classname = "";
         
-            # if ($package) {
-                # $classname = join '::', 'DA_SC', 'LSD', $package, $file;
-                # $skipname  = join '_',$skipname, $file;
-            # }
-            # else {
-                $classname = join '::', 'DA_PM', 'LSD', $file;
-                # $skipname  = $skipname.'_'.$file;
-            # }
-
+             if ($package) {
+                 $classname = join '::', 'DA_SC', 'LSD', $package, $file;
+             }
+             else {
+                $classname = join '::','Database', 'Accessor', 'DAD', $file;
+             }
             eval  "require $classname";
 
             if ($@) {
                 my $err = $@;
                 my $advice
-                    = "DA/LSD/$file ($classname) may not be an DA LSD!\n\n";
+                    = "Database/Accessor/DAD/$file ($classname) may not be an Database Accessor Driver (DAD)!\n\n";
                 warn(
-                    "\n\n Load of DA/LSD/$file.pm failed: \n   Error=$err \n $advice\n");
+                    "\n\n Load of Database/Accessor/DAD/$file.pm failed: \n   Error=$err \n $advice\n");
                 next;
             }
             else {
                 next
-                  unless (does_role($classname,'DA_PM::Roles::LSD'));    #now only loads this class
-warn("--->Got here classname=".Dumper($classname->connection_class));
-#                  my $lsd =$classname->new();
-               $lsd->{$classname->connection_class} =$classname;
+                  unless (does_role($classname,'Database::Accessor::Roles::DAD'));    #now only loads this class
+               $dad->{$classname->DB_Class} = $classname;
             }
 
         }
       
     }
-    $self->_lsds($lsd)
-      if (keys($lsd))
+    $self->_ldad($dad)
+      if (keys($dad))
         
         
 }
 
 
-has _lsds =>(
+has _ldad =>(
     isa  => 'HashRef',
     is      => 'rw',
 );
@@ -109,23 +98,23 @@ sub retrieve {
    my $self=shift;
    my ($conn,$container,$opt) = @_;
    
-   my $drivers = $self->_lsds();
+   my $drivers = $self->_ldad();
    my $driver =  $drivers->{ref($conn)};
    
-   die "No LSD loaded for ".ref($conn). " Maybe you have to load a DSL for it?"
+   die "No Database::Accessor::Driver loaded for ".ref($conn). " Maybe you have to install a Database::Accessor::DAD::?? for it?"
      unless($driver);
    
-   my $lsd = $driver->new({view=>$self->view,
+   my $dad = $driver->new({view=>$self->view,
                           elements=>$self->elements});
    
    
-   return $lsd->_execute("retrieve",$conn,$container,$opt);
+   return $dad->Execute("retrieve",$conn,$container,$opt);
 }
 
 
 {
     package 
-           DA::View;
+          Database::Accessor::View;
     use Moose;
 
     has 'name' => (
@@ -155,8 +144,7 @@ sub retrieve {
   }
 {
   package 
-
-           DA::Element;
+        Database::Accessor::Element;
 
     use Moose;
 
@@ -182,13 +170,14 @@ sub retrieve {
 }
 
 
-package DA_PM::Roles::LSD;
+package Database::Accessor::Roles::DAD;
 BEGIN {
   $DA_PM::Roles::LSD::VERSION = "0.01";
 }
+
 use Moose::Role;
-requires 'connection_class';
-requires '_execute';
+requires 'DB_Class';
+requires 'Execute';
 
 has view => (
     is     => 'ro',

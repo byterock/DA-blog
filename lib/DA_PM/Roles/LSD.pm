@@ -1,4 +1,4 @@
-package DA_PM::Roles::LSD;
+package DA_PM::Roles::LSDx;
 BEGIN {
   $DA_PM::Roles::LSD::VERSION = "0.01";
 }
