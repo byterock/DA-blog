@@ -104,8 +104,8 @@ sub retrieve {
    die "No Database::Accessor::Driver loaded for ".ref($conn). " Maybe you have to install a Database::Accessor::DAD::?? for it?"
      unless($driver);
    
-   my $dad = $driver->new({view=>$self->view,
-                          elements=>$self->elements});
+   my $dad = $driver->new({View=>$self->view,
+                           Elements=>$self->elements});
    
    
    return $dad->Execute("retrieve",$conn,$container,$opt);
@@ -132,16 +132,16 @@ sub retrieve {
 
     );
 
-  sub retrieve {
-        my $self = shift;
-        if ( $self->alias() ) {
-            return $self->name() . "  AS " . $self->alias();
-        }
-        else {
-            return $self->name();
-        }
-    }
-  }
+  # sub retrieve {
+        # my $self = shift;
+        # if ( $self->alias() ) {
+            # return $self->name() . "  AS " . $self->alias();
+        # }
+        # else {
+            # return $self->name();
+        # }
+    # }
+   }
 {
   package 
         Database::Accessor::Element;
@@ -158,15 +158,15 @@ sub retrieve {
         isa      => 'Str',
         is     => 'rw',
     );
-    sub retrieve {
-        my $self = shift;
-        if ( $self->alias() ) {
-            return $self->name() . "  AS " . $self->alias();
-        }
-        else {
-            return $self->name();
-        }
-    }
+    # sub retrieve {
+        # my $self = shift;
+        # if ( $self->alias() ) {
+            # return $self->name() . "  AS " . $self->alias();
+        # }
+        # else {
+            # return $self->name();
+        # }
+    # }
 }
 
 
@@ -179,12 +179,12 @@ use Moose::Role;
 requires 'DB_Class';
 requires 'Execute';
 
-has view => (
+has View => (
     is     => 'ro',
     isa    => 'Object',
 );
 
-has elements  => (
+has Elements  => (
     isa  => 'ArrayRef',
     is      => 'ro',
 );

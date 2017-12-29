@@ -14,10 +14,10 @@ sub Execute {
     my $delimiter = " ";
     my $sql       = "db.";
 
-    $sql .= $self->view()->name();
+    $sql .= $self->View()->name();
     $sql .= ".find({},{";
 
-    foreach my $element ( @{ $self->elements() } ) {
+    foreach my $element ( @{ $self->Elements() } ) {
 
         $sql .= $delimiter . $element->name() . ": 1";
         $delimiter = ", ";
