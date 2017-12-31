@@ -8,6 +8,7 @@ BEGIN {
 use Data::Dumper;
 use File::Spec;
 use Moose;
+with qw(Database::Accessor::Types);
 use Moose::Util qw(does_role);
 
 sub BUILD {
@@ -84,7 +85,7 @@ has _ldad =>(
 
 has view => (
     is     => 'rw',
-    isa    => 'Object',
+    isa    => 'View',
 );
 
 has elements  => (
@@ -191,10 +192,16 @@ has Elements  => (
 
 1;
 
+# {
+# package Database::Accessor::Types;
+# use Moose::Role;
+# use Moose::Util::TypeConstraints;
+# use Database::Accessor::View;
 
+# class_type 'View',  { class => 'Database::Accessor::View' };
 
-1;
-
+# 1;
+# }
 
 
 # __PACKAGE__->meta->make_immutable;

@@ -33,7 +33,7 @@ use Test::More 0.82;
 use Test::Fatal;
 use Data::Dumper;
 use lib ('D:\GitHub\DA-blog\lib');
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Moose::Util qw(apply_all_roles does_role with_traits);
 use Time::HiRes;
 
@@ -66,7 +66,16 @@ my $address = Database::Accessor->new(
     }
 );
 
-
+#eval {
+   $address->view($street);
+ #  };
+   if ($@) {
+       
+      pass("Can only take a View Class");
+   }
+   else {
+       fail("Takes a non View Class");
+   }
  ok( ref($address) eq 'Database::Accessor', "Address is a Database::Accessor" );
  my $fake_dbh = DBI::db->new();
 ok(
