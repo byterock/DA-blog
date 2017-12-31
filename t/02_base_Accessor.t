@@ -66,9 +66,9 @@ my $address = Database::Accessor->new(
     }
 );
 
-#eval {
+eval {
    $address->view($street);
- #  };
+  };
    if ($@) {
        
       pass("Can only take a View Class");
