@@ -33,18 +33,14 @@ use Test::More 0.82;
 use Test::Fatal;
 use Data::Dumper;
 use lib ('D:\GitHub\DA-blog\lib');
-use Test::More tests => 11;
+use Test::More tests => 9;
 use Moose::Util qw(apply_all_roles does_role with_traits);
 use Time::HiRes;
 
 BEGIN {
     use_ok('Database::Accessor');
-    use_ok('Database::Accessor::View');
-    use_ok('Database::Accessor::Element');
 }
 
-my $view = Database::Accessor::View->new({name  => 'person',alias => 'me'});
-ok( ref($view) eq 'Database::Accessor::View', "Person is a View" );
 my $street = Database::Accessor::Element->new( { name => 'street', } );
 ok( ref($street) eq 'Database::Accessor::Element', "Street is an Element" );
 my $country = Database::Accessor::Element->new( { name => 'country', } );
@@ -56,7 +52,8 @@ my @elements = ( $street, $city, $country );
 
 my $address = Database::Accessor->new(
     {
-        view     => $view,
+        view     => {name  => 'person',
+                     alias => 'me'},
         elements => \@elements
     }
 );
@@ -71,8 +68,11 @@ eval {
    else {
        fail("Takes a non View Class");
    }
- ok( ref($address) eq 'Database::Accessor', "Address is a Database::Accessor" );
- my $fake_dbh = DBI::db->new();
+
+ok( ref($address->view()) eq 'Database::Accessor::View', "View is a Database::Accessor::View" );
+
+ok( ref($address) eq 'Database::Accessor', "Address is a Database::Accessor" );
+my $fake_dbh = DBI::db->new();
 ok(
     $address->retrieve( $fake_dbh, $result ) eq
       'SELECT  street, city, country FROM person  AS me',

@@ -8,5 +8,8 @@ use Database::Accessor::View;
 
 class_type 'View',  { class => 'Database::Accessor::View' };
 
+
+coerce 'View', from 'HashRef', via { Database::Accessor::View->new( %{$_} ) };
+
 1;
 }

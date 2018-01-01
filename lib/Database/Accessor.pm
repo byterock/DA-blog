@@ -14,7 +14,7 @@ use Moose::Util qw(does_role);
 sub BUILD {
     my $self = shift;
     map { $self->_loadDADClassesFromDir($_) }
-      grep { -d $_ } map { File::Spec->catdir($_, 'Database','Accessor' ) } @INC;
+      grep { -d $_ } map { File::Spec->catdir($_, 'Database','Accessor','DAD' ) } @INC;
 
 }
 
@@ -40,14 +40,16 @@ sub _loadDADClassesFromDir {
         elsif (/.pm$/) { #we only care about pm files
             my ($volume, $dir, $file) = File::Spec->splitpath($_);
             $file =~ s{\.pm$}{};    # remove .pm extension
-            $dir =~ s/^.+Database\/Accessor\///;
+            $dir =~ s/\\/\//gi;
+            $dir =~ s/^.+Database\/Accessor\/DAD\///;
             my $_package = join '::' => grep $_ => File::Spec->splitdir($dir);
             # # untaint that puppy!
             my ($package) = $_package =~ /^([[:word:]]+(?:::[[:word:]]+)*)$/;
+         
             my $classname = "";
         
              if ($package) {
-                 $classname = join '::', 'DA_SC', 'LSD', $package, $file;
+                 $classname = join '::', 'Database', 'Accessor', 'DAD', $package, $file;
              }
              else {
                 $classname = join '::','Database', 'Accessor', 'DAD', $file;
@@ -86,6 +88,7 @@ has _ldad =>(
 has view => (
     is     => 'rw',
     isa    => 'View',
+    coerce => 1,
 );
 
 has elements  => (
