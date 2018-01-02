@@ -41,20 +41,14 @@ BEGIN {
     use_ok('Database::Accessor');
 }
 
-my $street = Database::Accessor::Element->new( { name => 'street', } );
-ok( ref($street) eq 'Database::Accessor::Element', "Street is an Element" );
-my $country = Database::Accessor::Element->new( { name => 'country', } );
-ok( ref($country) eq 'Database::Accessor::Element', "County is an Element" );
-my $city = Database::Accessor::Element->new( { name => 'city', } );
-ok( ref($city) eq 'Database::Accessor::Element', "City is an Element" );
-my @elements = ( $street, $city, $country );
-
 
 my $address = Database::Accessor->new(
     {
         view     => {name  => 'person',
                      alias => 'me'},
-        elements => \@elements
+        elements => [{ name => 'street', },
+                     { name => 'city', },
+                     { name => 'country', } ]
     }
 );
 
@@ -71,8 +65,14 @@ eval {
 
 ok( ref($address->view()) eq 'Database::Accessor::View', "View is a Database::Accessor::View" );
 
+foreach my $element (@{$address->elements()}){
+    ok( ref($element) eq 'Database::Accessor::Element', "Element ".$element->name()." is a Database::Accessor::Element" );
+    
+}    
+
 ok( ref($address) eq 'Database::Accessor', "Address is a Database::Accessor" );
 my $fake_dbh = DBI::db->new();
+
 ok(
     $address->retrieve( $fake_dbh, $result ) eq
       'SELECT  street, city, country FROM person  AS me',

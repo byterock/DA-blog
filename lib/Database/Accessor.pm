@@ -92,8 +92,9 @@ has view => (
 );
 
 has elements  => (
-    isa  => 'ArrayRef',
-    is      => 'rw',
+    isa    => 'ArrayRefofElements',
+    coerce => 1,
+    is     => 'rw',
 );
 
 
