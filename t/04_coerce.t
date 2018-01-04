@@ -33,7 +33,7 @@ use Test::More 0.82;
 use Test::Fatal;
 use Data::Dumper;
 use lib ('D:\GitHub\DA-blog\lib');
-use Test::More tests => 9;
+use Test::More tests => 13;
 use Moose::Util qw(apply_all_roles does_role with_traits);
 use Time::HiRes;
 
@@ -48,7 +48,11 @@ my $address = Database::Accessor->new(
                      alias => 'me'},
         elements => [{ name => 'street', },
                      { name => 'city', },
-                     { name => 'country', } ]
+                     { name => 'country', } ],
+        conditions=>[{name=>'country is not a city',
+                      left=>{name=>'country'},
+                     operator=>'!=',
+                     right=>{name=>'city'}}]
     }
 );
 
@@ -70,12 +74,21 @@ foreach my $element (@{$address->elements()}){
     
 }    
 
+foreach my $predicate (@{$address->conditions()}){
+    ok( ref($predicate) eq 'Database::Accessor::Predicate', "Condtion ".$predicate->name()." is a Database::Accessor::Predicate" );
+    ok( ref($predicate->left()) eq 'Database::Accessor::Element', "Left ".$predicate->left()->name()." is a Database::Accessor::Element");
+    ok( ref($predicate->right()) eq 'Database::Accessor::Element', "Right ".$predicate->right()->name()." is a Database::Accessor::Element");
+    ok( $predicate->operator eq '!=',"Operator is !=")
+}   
+
 ok( ref($address) eq 'Database::Accessor', "Address is a Database::Accessor" );
 my $fake_dbh = DBI::db->new();
 
+warn( $address->retrieve( $fake_dbh, $result ) );
+
 ok(
     $address->retrieve( $fake_dbh, $result ) eq
-      'SELECT  street, city, country FROM person  AS me',
+      'SELECT  street, city, country FROM person  AS me WHERE country != city ',
     'SQL correct'
 );
 my $fake_mongo = MongoDB::Collection->new();
@@ -87,5 +100,5 @@ ok(
 );
 
 
-
+ done_testing()
 

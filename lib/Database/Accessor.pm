@@ -97,6 +97,13 @@ has elements  => (
     is     => 'rw',
 );
 
+has conditions => (
+    is      => 'rw',
+    isa     => 'ArrayRefofPredicates',
+    coerce  => 1,
+    default => sub { [] },
+
+);
 
 
 sub retrieve {
@@ -174,7 +181,56 @@ sub retrieve {
     # }
 }
 
+{
+    package 
+    Database::Accessor::Predicate;
 
+    use Moose;
+
+    has operator => (
+        is      => 'rw',
+        isa     => 'Str',
+        default => '='
+    );
+
+    has 'name' => (
+        isa      => 'Str',
+        is       => 'rw',
+    );
+
+    has left => (
+        is       => 'rw',
+        isa      => 'Element',
+        required => 1,
+        coerce   => 1,
+    );
+
+    has right => (
+        is       => 'rw',
+        isa      => 'Element',
+        required => 1,
+        coerce   => 1,
+    );
+
+# has open_parenthes => (
+    # is  => 'rw',
+    # isa => 'Int',
+    # default => 0,
+    # alias    => [qw(open open_paren)]
+
+# );
+
+
+# has close_parenthes => (
+    # is  => 'rw',
+    # isa => 'Int',
+    # default => 0,
+    # alias    => [qw(close close_paren)]
+
+# );
+
+   1;
+}
 package Database::Accessor::Roles::DAD;
 BEGIN {
   $DA_PM::Roles::LSD::VERSION = "0.01";
@@ -193,7 +249,10 @@ has Elements  => (
     isa  => 'ArrayRef',
     is      => 'ro',
 );
-
+has Conditions  => (
+    isa  => 'ArrayRef',
+    is      => 'ro',
+);
 1;
 
 # {

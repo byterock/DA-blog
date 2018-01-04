@@ -18,8 +18,17 @@ sub Execute {
         $delimiter = ", ";
 
     }
-    return $sql . " FROM " . $self->element_sql($self->View());
-
+    $sql . " FROM " . $self->element_sql($self->View());
+    return $sql . " WHERE "
+      if ($self->Conditions());
+    foreach my $condtion ($self->Conditions()){
+       return $sql . $self->element_sql($condtion->left)
+                   . " "
+                   .$condtion->operator
+                   . " "
+                   . $self->element_sql($condtion->right);
+    
+    }
 }
 
 sub DB_Class {
