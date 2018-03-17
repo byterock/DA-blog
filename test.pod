@@ -1,0 +1,41 @@
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Database::Accessor::Manual - What is Database::Accessor, and how do I use it?
+
+=head1 VERSION
+
+version 0.01
+
+=head1 Datatbase::Accessor is not an ORM
+
+=head1 Table Of Contents
+
+=over 4
+
+=item *
+
+L<Database::Accessor::Tutorial::GettingStarted>
+
+=item *
+
+L<Database::Accessor::Tutorial::Basics>
+
+=back
+
+=head1 AUTHOR
+
+John Scoles
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2018 by John Scoles.
+
+This is free software, licensed under:
+
+  The GNU General Public License, Version 3, June 2007
+
+=cut
